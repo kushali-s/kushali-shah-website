@@ -95,13 +95,114 @@
   }
 
   function initJourney() {
-    var nodes = document.querySelectorAll(".journey-node");
-    nodes.forEach(function (btn) {
+    var items = Array.prototype.slice.call(document.querySelectorAll(".journey-item"));
+    var routePath = document.querySelector(".route-svg path");
+
+    function setRouteProgress(fraction) {
+      if (!routePath) return;
+      var clamped = Math.max(0, Math.min(1, fraction));
+      routePath.style.strokeDashoffset = (100 - clamped * 100).toFixed(1);
+    }
+
+    items.forEach(function (item, i) {
+      var btn = item.querySelector(".journey-node");
+      if (!btn) return;
       btn.addEventListener("click", function () {
-        var item = btn.closest(".journey-item");
         var expanded = item.classList.toggle("is-open");
         btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+        setRouteProgress((i + 1) / items.length);
       });
+    });
+
+    if (routePath && items.length && "IntersectionObserver" in window) {
+      var track = document.querySelector(".journey-track");
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            setRouteProgress(1 / items.length);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      if (track) io.observe(track);
+    }
+  }
+
+  function initHeroReveal() {
+    var lines = document.querySelectorAll(".hero-line");
+    if (!lines.length) return;
+    var wordIndex = 0;
+    lines.forEach(function (line) {
+      line.querySelectorAll(".word").forEach(function (w) {
+        w.style.transitionDelay = Math.min(wordIndex * 45, 420) + "ms";
+        wordIndex++;
+      });
+    });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        lines.forEach(function (line) { line.classList.add("in-view"); });
+      });
+    });
+  }
+
+  function initHeroParallax() {
+    if (reducedMotion) return;
+    var photo = document.querySelector(".cover-photo img");
+    var section = document.querySelector(".cover");
+    if (!photo || !section) return;
+
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var rect = section.getBoundingClientRect();
+      var progress = 1 - Math.max(0, Math.min(1, rect.bottom / (rect.height + window.innerHeight)));
+      var scale = 1 + progress * 0.08;
+      var shift = progress * 18;
+      photo.style.transform = "scale(" + scale.toFixed(3) + ") translateY(" + shift.toFixed(1) + "px)";
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+
+  function initSmoothScroll() {
+    if (reducedMotion || !fine) return;
+    if (window.matchMedia && window.matchMedia("(max-width: 880px)").matches) return;
+
+    var target = window.scrollY;
+    var current = target;
+    var ticking = false;
+    var maxScroll = function () {
+      return document.documentElement.scrollHeight - window.innerHeight;
+    };
+
+    window.addEventListener("wheel", function (e) {
+      if (e.ctrlKey) return; // let pinch-zoom alone
+      e.preventDefault();
+      target = Math.max(0, Math.min(maxScroll(), target + e.deltaY));
+      if (!ticking) { ticking = true; requestAnimationFrame(tick); }
+    }, { passive: false });
+
+    function tick() {
+      current += (target - current) * 0.11;
+      if (Math.abs(target - current) < 0.5) {
+        current = target;
+        window.scrollTo(0, current);
+        ticking = false;
+        return;
+      }
+      window.scrollTo(0, current);
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener("resize", function () { target = window.scrollY; current = target; });
+
+    // Keyboard and touch scrolling stay native — just keep our target in sync afterwards.
+    var resyncKeys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+    window.addEventListener("keydown", function (e) {
+      if (resyncKeys.indexOf(e.key) === -1) return;
+      requestAnimationFrame(function () { target = window.scrollY; current = target; });
     });
   }
 
@@ -202,6 +303,9 @@
     initCursor();
     initTilt();
     initJourney();
+    initHeroReveal();
+    initHeroParallax();
+    initSmoothScroll();
     initCountUp();
     initGallery();
   });
