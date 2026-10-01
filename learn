@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<script>document.documentElement.className = "js";</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn — Kushali Shah</title>
+<meta name="description" content="Learn with Kushali Shah — writing on Substack about building AI agents and product work in the AI era.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,350;0,9..144,380;0,9..144,460;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,420&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="name">Kushali Shah</span>
+  <nav>
+    <a href="index.html" class="hover-swap"><span class="sw sw--out">Home</span><span class="sw sw--in" aria-hidden="true">Home</span></a>
+    <a href="projects.html" class="hover-swap"><span class="sw sw--out">Projects</span><span class="sw sw--in" aria-hidden="true">Projects</span></a>
+    <a href="about.html" class="hover-swap"><span class="sw sw--out">About</span><span class="sw sw--in" aria-hidden="true">About</span></a>
+    <a href="learn.html" aria-current="page" class="hover-swap"><span class="sw sw--out">Learn</span><span class="sw sw--in" aria-hidden="true">Learn</span></a>
+  </nav>
+</div>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="rail-top">
+      <p class="name">Kushali Shah</p>
+      <p class="role">Product Manager</p>
+      <nav>
+        <a href="index.html" class="hover-swap"><span class="sw sw--out">Home</span><span class="sw sw--in" aria-hidden="true">Home</span></a>
+        <a href="projects.html" class="hover-swap"><span class="sw sw--out">Projects</span><span class="sw sw--in" aria-hidden="true">Projects</span></a>
+        <a href="about.html" class="hover-swap"><span class="sw sw--out">About</span><span class="sw sw--in" aria-hidden="true">About</span></a>
+        <a href="learn.html" aria-current="page" class="hover-swap"><span class="sw sw--out">Learn</span><span class="sw sw--in" aria-hidden="true">Learn</span></a>
+      </nav>
+    </div>
+    <div class="rail-bottom">
+      <a href="mailto:kushalishah1@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/shahkushali/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/kushalishah" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://kushalishah.substack.com/" target="_blank" rel="noopener">Substack</a>
+      <p class="location">London, UK</p>
+    </div>
+  </aside>
+
+  <main>
+
+    <section class="cover">
+      <div class="cover-small reveal">
+        <p class="eyebrow on-ink">Learn</p>
+        <h1>Learn how to build AI agents, as I build them.</h1>
+        <p class="lede on-ink">I write about the AI agent work I do at Kavida.ai and what I'm picking up along the way — real workflows, real mistakes, nothing theoretical.</p>
+      </div>
+    </section>
+
+    <div class="page-pad">
+
+    <section class="content-measure reveal spaced">
+      <p>I'm Kushali — a product manager building AI procurement agents in aerospace &amp; defense, and I write up what that actually involves on Substack. Not polished thought-leadership, just the real process: how an agent goes from idea to something people trust with a real workflow, what breaks along the way, and what I'd do differently.</p>
+      <p>If you're trying to understand how AI agents get built in practice — not just the demo, the whole messy middle — this is where I'm documenting it as I go.</p>
+    </section>
+
+    <section class="reveal spaced">
+      <div class="substack-card tilt">
+        <div class="substack-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 5h16v3H4z"/><path d="M4 11h16v2H4z"/><path d="M4 16h10v2H4z"/></svg>
+        </div>
+        <div>
+          <h2>Read it on Substack</h2>
+          <p>Notes on building AI agents, product work in the AI era, and what I'm learning in the process.</p>
+        </div>
+        <a href="https://kushalishah.substack.com/" target="_blank" rel="noopener" class="hover-swap substack-card-link">
+          <span class="sw sw--out">Visit the Substack</span><span class="sw sw--in" aria-hidden="true">Visit the Substack</span>
+        </a>
+      </div>
+    </section>
+
+    </div>
+
+    <footer class="page-footer">
+      <span>© 2026 Kushali Shah</span>
+      <span>London, UK · <a href="mailto:kushalishah1@gmail.com">kushalishah1@gmail.com</a></span>
+    </footer>
+
+  </main>
+</div>
+
+</body>
+</html>
