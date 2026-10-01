@@ -43,39 +43,6 @@
     els.forEach(function (el) { io.observe(el); });
   }
 
-  function initCursor() {
-    if (reducedMotion || !fine) return;
-
-    var dot = document.createElement("div");
-    dot.className = "cursor-dot";
-    document.body.appendChild(dot);
-    document.body.classList.add("has-custom-cursor");
-
-    var x = window.innerWidth / 2, y = window.innerHeight / 2;
-    var cx = x, cy = y;
-
-    window.addEventListener("mousemove", function (e) {
-      x = e.clientX; y = e.clientY;
-      var el = document.elementFromPoint(x, y);
-      var onInk = el && el.closest(".cover");
-      dot.classList.toggle("cursor-dot--on-ink", !!onInk);
-    });
-
-    function tick() {
-      cx += (x - cx) * 0.22;
-      cy += (y - cy) * 0.22;
-      dot.style.transform = "translate(" + cx + "px, " + cy + "px)";
-      requestAnimationFrame(tick);
-    }
-    tick();
-
-    var hoverables = document.querySelectorAll("a, button, .journey-node, .gallery-item, .case, .work-row");
-    hoverables.forEach(function (el) {
-      el.addEventListener("mouseenter", function () { dot.classList.add("cursor-dot--big"); });
-      el.addEventListener("mouseleave", function () { dot.classList.remove("cursor-dot--big"); });
-    });
-  }
-
   function initTilt() {
     if (reducedMotion || !fine) return;
     var cards = document.querySelectorAll(".tilt");
@@ -164,46 +131,6 @@
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
     update();
-  }
-
-  function initSmoothScroll() {
-    if (reducedMotion || !fine) return;
-    if (window.matchMedia && window.matchMedia("(max-width: 880px)").matches) return;
-
-    var target = window.scrollY;
-    var current = target;
-    var ticking = false;
-    var maxScroll = function () {
-      return document.documentElement.scrollHeight - window.innerHeight;
-    };
-
-    window.addEventListener("wheel", function (e) {
-      if (e.ctrlKey) return; // let pinch-zoom alone
-      e.preventDefault();
-      target = Math.max(0, Math.min(maxScroll(), target + e.deltaY));
-      if (!ticking) { ticking = true; requestAnimationFrame(tick); }
-    }, { passive: false });
-
-    function tick() {
-      current += (target - current) * 0.11;
-      if (Math.abs(target - current) < 0.5) {
-        current = target;
-        window.scrollTo(0, current);
-        ticking = false;
-        return;
-      }
-      window.scrollTo(0, current);
-      requestAnimationFrame(tick);
-    }
-
-    window.addEventListener("resize", function () { target = window.scrollY; current = target; });
-
-    // Keyboard and touch scrolling stay native — just keep our target in sync afterwards.
-    var resyncKeys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
-    window.addEventListener("keydown", function (e) {
-      if (resyncKeys.indexOf(e.key) === -1) return;
-      requestAnimationFrame(function () { target = window.scrollY; current = target; });
-    });
   }
 
   function initCountUp() {
@@ -300,12 +227,10 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     initReveals();
-    initCursor();
     initTilt();
     initJourney();
     initHeroReveal();
     initHeroParallax();
-    initSmoothScroll();
     initCountUp();
     initGallery();
   });
