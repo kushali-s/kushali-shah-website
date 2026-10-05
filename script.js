@@ -114,8 +114,8 @@
 
   function initDustTrail() {
     if (reducedMotion || !fine) return;
-    var host = document.querySelector(".hero-h1");
-    if (!host) return;
+    var host = document.querySelector(".cover-text");
+    if (!host || !document.querySelector(".hero-h1")) return;
 
     var canvas = document.createElement("canvas");
     canvas.className = "dust-canvas";
@@ -123,7 +123,6 @@
     var ctx = canvas.getContext("2d");
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var w = 0, h = 0;
-    var inkColor = "180,170,140";
 
     function resize() {
       var r = host.getBoundingClientRect();
@@ -133,17 +132,23 @@
     resize();
     window.addEventListener("resize", resize);
 
-    function stamp(x, y) {
-      var radius = 46 * dpr;
-      var count = 60;
+    /* Each stamp = a puff of grain: dark specks scratch the letters out,
+       warm dust specks stay visible against the dark cover. */
+    function stamp(x, y, vx, vy) {
+      var radius = 80 * dpr;
+      var count = 140;
       for (var i = 0; i < count; i++) {
         var angle = Math.random() * Math.PI * 2;
-        var dist = Math.random() * radius;
-        var px = x + Math.cos(angle) * dist;
-        var py = y + Math.sin(angle) * dist * 0.55;
-        var alpha = (1 - dist / radius) * (0.16 + Math.random() * 0.22);
-        var size = (1 + Math.random() * 2.2) * dpr;
-        ctx.fillStyle = "rgba(" + inkColor + "," + alpha.toFixed(3) + ")";
+        var dist = Math.pow(Math.random(), 0.8) * radius;
+        var px = x + Math.cos(angle) * dist - vx * Math.random() * 1.2;
+        var py = y + Math.sin(angle) * dist * 0.6 - vy * Math.random() * 1.2;
+        var falloff = 1 - dist / radius;
+        var size = (1 + Math.random() * 3) * dpr;
+        if (Math.random() < 0.65) {
+          ctx.fillStyle = "rgba(21,19,14," + Math.min(0.95, falloff * (0.5 + Math.random() * 0.6)).toFixed(3) + ")";
+        } else {
+          ctx.fillStyle = "rgba(196,176,138," + (falloff * (0.25 + Math.random() * 0.35)).toFixed(3) + ")";
+        }
         ctx.fillRect(px, py, size, size);
       }
     }
@@ -153,14 +158,12 @@
       var r = host.getBoundingClientRect();
       var x = (e.clientX - r.left) * dpr;
       var y = (e.clientY - r.top) * dpr;
-      if (lastX !== null) {
-        var dx = x - lastX, dy = y - lastY;
-        var steps = Math.max(1, Math.min(8, Math.round(Math.hypot(dx, dy) / (10 * dpr))));
-        for (var i = 1; i <= steps; i++) {
-          stamp(lastX + (dx * i) / steps, lastY + (dy * i) / steps);
-        }
-      } else {
-        stamp(x, y);
+      var dx = lastX === null ? 0 : x - lastX;
+      var dy = lastY === null ? 0 : y - lastY;
+      var steps = Math.max(1, Math.min(10, Math.round(Math.hypot(dx, dy) / (8 * dpr))));
+      for (var i = 1; i <= steps; i++) {
+        stamp(lastX === null ? x : lastX + (dx * i) / steps,
+              lastY === null ? y : lastY + (dy * i) / steps, dx, dy);
       }
       lastX = x; lastY = y;
     });
@@ -168,7 +171,7 @@
 
     function fade() {
       ctx.globalCompositeOperation = "destination-out";
-      ctx.fillStyle = "rgba(0,0,0,0.045)";
+      ctx.fillStyle = "rgba(0,0,0,0.028)";
       ctx.fillRect(0, 0, w, h);
       ctx.globalCompositeOperation = "source-over";
       requestAnimationFrame(fade);
