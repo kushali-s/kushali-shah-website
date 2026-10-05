@@ -289,9 +289,9 @@ html.js .hero-line.in-view .word { transform: none; }
   position: absolute;
   inset: 0;
   pointer-events: none;
-  mix-blend-mode: screen;
   z-index: 2;
 }
+.cover-text { position: relative; }
 
 /* ---------- Journey — full-bleed dark route panel ---------- */
 
