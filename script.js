@@ -112,6 +112,70 @@
     });
   }
 
+  function initDustTrail() {
+    if (reducedMotion || !fine) return;
+    var host = document.querySelector(".hero-h1");
+    if (!host) return;
+
+    var canvas = document.createElement("canvas");
+    canvas.className = "dust-canvas";
+    host.appendChild(canvas);
+    var ctx = canvas.getContext("2d");
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = 0, h = 0;
+    var inkColor = "180,170,140";
+
+    function resize() {
+      var r = host.getBoundingClientRect();
+      w = canvas.width = Math.max(1, Math.round(r.width * dpr));
+      h = canvas.height = Math.max(1, Math.round(r.height * dpr));
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    function stamp(x, y) {
+      var radius = 46 * dpr;
+      var count = 60;
+      for (var i = 0; i < count; i++) {
+        var angle = Math.random() * Math.PI * 2;
+        var dist = Math.random() * radius;
+        var px = x + Math.cos(angle) * dist;
+        var py = y + Math.sin(angle) * dist * 0.55;
+        var alpha = (1 - dist / radius) * (0.16 + Math.random() * 0.22);
+        var size = (1 + Math.random() * 2.2) * dpr;
+        ctx.fillStyle = "rgba(" + inkColor + "," + alpha.toFixed(3) + ")";
+        ctx.fillRect(px, py, size, size);
+      }
+    }
+
+    var lastX = null, lastY = null;
+    host.addEventListener("mousemove", function (e) {
+      var r = host.getBoundingClientRect();
+      var x = (e.clientX - r.left) * dpr;
+      var y = (e.clientY - r.top) * dpr;
+      if (lastX !== null) {
+        var dx = x - lastX, dy = y - lastY;
+        var steps = Math.max(1, Math.min(8, Math.round(Math.hypot(dx, dy) / (10 * dpr))));
+        for (var i = 1; i <= steps; i++) {
+          stamp(lastX + (dx * i) / steps, lastY + (dy * i) / steps);
+        }
+      } else {
+        stamp(x, y);
+      }
+      lastX = x; lastY = y;
+    });
+    host.addEventListener("mouseleave", function () { lastX = null; lastY = null; });
+
+    function fade() {
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = "rgba(0,0,0,0.045)";
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = "source-over";
+      requestAnimationFrame(fade);
+    }
+    requestAnimationFrame(fade);
+  }
+
   function initHeroParallax() {
     if (reducedMotion) return;
     var photo = document.querySelector(".cover-photo img");
@@ -230,6 +294,7 @@
     initTilt();
     initJourney();
     initHeroReveal();
+    initDustTrail();
     initHeroParallax();
     initCountUp();
     initGallery();
