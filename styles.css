@@ -275,7 +275,7 @@ hr.rule { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
 
 /* ---------- Hero headline — line-by-line entrance (load only) ---------- */
 
-.hero-h1 { max-width: none; }
+.hero-h1 { max-width: none; position: relative; }
 .hero-line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .hero-line .word { display: inline-block; }
 html.js .hero-line .word {
@@ -283,6 +283,15 @@ html.js .hero-line .word {
   transition: transform 0.9s cubic-bezier(.22,.9,.25,1);
 }
 html.js .hero-line.in-view .word { transform: none; }
+
+/* ---------- Hero headline — dust-trail hover (migration smudge) ---------- */
+.dust-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 2;
+}
 
 /* ---------- Journey — full-bleed dark route panel ---------- */
 
